@@ -1,22 +1,22 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-const resolvePath = (_path) => path.resolve(__dirname, _path);
+const resolvePath = (_path) => path.resolve(__dirname, _path)
 
 module.exports = {
   entry: {
-    app: "./src/index.js",
+    app: './src/main.tsx'
   },
   output: {
-    filename: "js/[name].bundle.js",
-    path: resolvePath("../dist"),
-    clean: true,
+    filename: 'js/[name].bundle.js',
+    path: resolvePath('../dist'),
+    clean: true
   },
   resolve: {
-    extensions: [".js", ".json", "jsx"],
+    extensions: ['.js', '.json', '.jsx', '.ts', '.tsx'],
     alias: {
-      "@": resolvePath("../src"),
-    },
+      '@': resolvePath('../src')
+    }
   },
   module: {
     rules: [
@@ -27,21 +27,29 @@ module.exports = {
         exclude: /node_modules/,
         //使用的loader
         use: {
-          loader: "babel-loader",
+          loader: 'babel-loader',
           options: {
-            presets: ["@babel/preset-env", "@babel/preset-react"],
-          },
-        },
+            presets: ['@babel/preset-env', '@babel/preset-react']
+          }
+        }
       },
-    ],
+      {
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        include: [resolvePath('../src')],
+        use: {
+          loader: 'ts-loader'
+        }
+      }
+    ]
   },
   plugins: [
     //生成html文件
     new HtmlWebpackPlugin({
       //使用html模板的目录
-      template: resolvePath("../public/index.html"),
+      template: resolvePath('../public/index.html'),
       //自动引入打包后的文件，默认值true
-      inject: true,
-    }),
-  ],
-};
+      inject: true
+    })
+  ]
+}
